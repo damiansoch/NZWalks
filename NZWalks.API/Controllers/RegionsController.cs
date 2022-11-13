@@ -21,10 +21,10 @@ namespace NZWalks.API.Controllers
         public IMapper Mapper { get; }
 
         [HttpGet]
-       public IActionResult GetAllRegions()
+       public async Task<IActionResult> GetAllRegions()
         {
             //getting domain regions
-            var allRegions= regionsRepository.GetAll();
+            var allRegions= await regionsRepository.GetAllAsync();
             //returning DTO regions
             //----------------------------manual
             //var regionsDTO = new List<Models.DTO.Region>();
