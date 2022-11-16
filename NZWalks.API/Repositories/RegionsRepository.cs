@@ -15,7 +15,8 @@ namespace NZWalks.API.Repositories
 
         public async Task< IEnumerable<Region>> GetAllAsync()
         {
-            return await _context.Regions.ToListAsync();
+            return await 
+                _context.Regions.ToListAsync();
         }
 
         public async Task<Region> GetAsync(Guid id)
@@ -57,7 +58,7 @@ namespace NZWalks.API.Repositories
             regionForUpdate.Long = region.Long;
             regionForUpdate.Population = region.Population;
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return regionForUpdate;
         }
