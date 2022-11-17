@@ -73,6 +73,11 @@ namespace NZWalks.API.Controllers
         [HttpPost]
         public async Task<IActionResult> AddRegionAsync([FromBody] AddRegionRequest addRegionRequest)
         {
+            //validate the request
+            if (!ValidateAddRegionRequest(addRegionRequest))
+            {
+                return BadRequest(ModelState);
+            };
             //request(DTO) to Domain Model
             var region = new Models.Domain.Region()
             {
@@ -155,6 +160,43 @@ namespace NZWalks.API.Controllers
 
             return Ok(regionDTO);
         }
+        #endregion
+
+        #region Private methods
+
+        private bool ValidateAddRegionRequest(AddRegionRequest addRegionRequest)
+        {
+            if (addRegionRequest == null)
+            {
+                ModelState.AddModelError(nameof(addRegionRequest), $"Add Region data is required");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(addRegionRequest.Code))
+            {
+                ModelState.AddModelError(nameof(addRegionRequest.Code),$"{nameof(addRegionRequest.Code)} can't be empty, null or have a whitespace");
+            }
+            if (string.IsNullOrWhiteSpace(addRegionRequest.Name))
+            {
+                ModelState.AddModelError(nameof(addRegionRequest.Name), $"{nameof(addRegionRequest.Name)} can't be empty, null or have a whitespace");
+            }
+            if (addRegionRequest.Area <= 0)
+            {
+                ModelState.AddModelError(nameof(addRegionRequest.Area), $"{nameof(addRegionRequest.Area)} has to be greater than 0");
+            }
+            if (addRegionRequest.Population < 0)
+            {
+                ModelState.AddModelError(nameof(addRegionRequest.Population), $"{nameof(addRegionRequest.Population)} has to be greater or equal to 0");
+            }
+
+            //----
+            if (ModelState.ErrorCount > 0)
+            {
+                return false;
+            }
+            return true;
+        }
+
         #endregion
     }
 }
