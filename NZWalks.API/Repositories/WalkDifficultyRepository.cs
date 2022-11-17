@@ -30,5 +30,30 @@ namespace NZWalks.API.Repositories
             await context.SaveChangesAsync();
             return walkDifficulty;
         }
+
+        public async Task<WalkDifficulty> UpdateWalkDificultyAsync(Guid id, WalkDifficulty walkDificulty)
+        {
+            var existingWalkDifficulty = await context.WalkDifficulty.FindAsync(id);
+            if (existingWalkDifficulty == null)
+            {
+                return null;
+            }
+            existingWalkDifficulty.Code = walkDificulty.Code;
+            await context.SaveChangesAsync();
+            return existingWalkDifficulty;
+            
+        }
+
+        public async Task<WalkDifficulty> DeleteWalkDifficultyByIdAsync(Guid id)
+        {
+            var walkDifficulty = await context.WalkDifficulty.FirstOrDefaultAsync(x => x.Id == id);
+            if(walkDifficulty == null)
+            {
+                return null;
+            }
+            context.WalkDifficulty.Remove(walkDifficulty);
+            await context.SaveChangesAsync();
+            return walkDifficulty;
+        }
     }
 }

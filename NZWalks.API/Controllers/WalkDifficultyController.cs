@@ -65,5 +65,43 @@ namespace NZWalks.API.Controllers
             return CreatedAtAction(nameof(GetWalkDifficultyByIdAsync), new {id = response.Id}, response);
         }
         #endregion
+
+        #region Update WalkDifficulty
+        [HttpPut]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> UpdateWalkDifficultyAsync([FromRoute]Guid id, [FromBody]Models.DTO.UpdateWalkDifficultyRequest updateWalkDifficultyRequest)
+        {
+            //convert to domain
+            var walkDifficulty = new Models.Domain.WalkDifficulty
+            {
+                Code = updateWalkDifficultyRequest.Code,
+            };
+            //send to repository
+            var response = await walkDifficultyRepository.UpdateWalkDificultyAsync(id, walkDifficulty);
+            if(response == null)
+            {
+                return NotFound();
+            }
+            //Convert response to DTO
+            var walkDifficultyDTO = mapper.Map<Models.DTO.WalkDifficulty>(response);
+            //return
+            return Ok(walkDifficultyDTO);
+        }
+        #endregion
+
+        #region Delete WalkDificulty
+        [HttpDelete]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> DeleteWalkDificultyAsync([FromRoute]Guid id)
+        {
+            var response = await walkDifficultyRepository.DeleteWalkDifficultyByIdAsync(id);
+            if(response == null)
+            {
+                return NotFound();
+            }
+            var walkDificuityDTO = mapper.Map<Models.DTO.WalkDifficulty>(response);
+            return Ok(walkDificuityDTO);
+        }
+        #endregion
     }
 }
