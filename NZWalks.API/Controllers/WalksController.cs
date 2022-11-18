@@ -51,10 +51,13 @@ namespace NZWalks.API.Controllers
         }
         #endregion
 
-        #region Add Region
+        #region Add Walk
         [HttpPost]
         public async Task<IActionResult> AddWalkAsync([FromBody] AddWalkRequest addWalkRequest)
         {
+
+
+
             //converting to domain
             var walk = new Models.Domain.Walk
             {
