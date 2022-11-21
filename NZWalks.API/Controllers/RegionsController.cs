@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NZWalks.API.Models.Domain;
 using NZWalks.API.Models.DTO;
@@ -8,6 +9,8 @@ namespace NZWalks.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    
+
     public class RegionsController : Controller
     {
         private readonly IRegionsRepository regionsRepository;
@@ -19,15 +22,18 @@ namespace NZWalks.API.Controllers
             this.mapper = mapper;
         }
 
-        public IMapper Mapper { get; }
+        public IMapper Mapper { get; } = default!;
 
         #region All Regions
         [HttpGet]
+        [Authorize(Roles = "reader")]
         public async Task<IActionResult> GetAllRegions()
         {
             //getting domain regions
             var allRegions = await regionsRepository.GetAllAsync();
+
             //returning DTO regions
+
             //----------------------------manual
             //var regionsDTO = new List<Models.DTO.Region>();
             //allRegions.ToList().ForEach(region =>
@@ -57,6 +63,7 @@ namespace NZWalks.API.Controllers
         [HttpGet]
         [Route("{id:guid}")]
         [ActionName("GetRegionByIdAsync")]
+        [Authorize(Roles = "reader")]
         public async Task<IActionResult> GetRegionByIdAsync([FromRoute] Guid id)
         {
             var region = await regionsRepository.GetAsync(id);
@@ -71,6 +78,7 @@ namespace NZWalks.API.Controllers
 
         #region Adding Region
         [HttpPost]
+        [Authorize(Roles = "writer")]
         public async Task<IActionResult> AddRegionAsync([FromBody] AddRegionRequest addRegionRequest)
         {
             //validate the request
@@ -113,6 +121,7 @@ namespace NZWalks.API.Controllers
         #region Delete Region
         [HttpDelete]
         [Route("{id:guid}")]
+        [Authorize(Roles = "writer")]
         public async Task<IActionResult> DeleteRegionAsync([FromRoute] Guid id)
         {
             //get region from the database
@@ -133,7 +142,8 @@ namespace NZWalks.API.Controllers
         #region Update Region
         [HttpPut]
         [Route("{id:guid}")]
-        
+        [Authorize(Roles = "writer")]
+
         public async Task<IActionResult> UpdateRegionAsync([FromRoute]Guid id, [FromBody]UpdateRegionRequest updateRegionRequest)
         {
             //validations

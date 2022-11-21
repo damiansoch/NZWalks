@@ -2,6 +2,6 @@
 {
     public class AddWalkDifficultyRequest
     {
-        public string Code { get; set; }
+        public string Code { get; set; } = default!;
     }
 }

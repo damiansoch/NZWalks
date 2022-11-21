@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NZWalks.API.Repositories;
 
@@ -19,6 +20,7 @@ namespace NZWalks.API.Controllers
 
         #region Get All
         [HttpGet]
+        [Authorize(Roles = "reader")]
         public async Task<IActionResult> GetAllWalkDifficutlies()
         {
             var walkDifficulties = await walkDifficultyRepository.GetAllWaklDifficultiesAsync();
@@ -32,6 +34,7 @@ namespace NZWalks.API.Controllers
         [HttpGet]
         [Route("{id:guid}")]
         [ActionName("GetWalkDifficultyByIdAsync")]
+        [Authorize(Roles = "reader")]
         public async Task<IActionResult> GetWalkDifficultyByIdAsync([FromRoute] Guid id)
         {
             //get domain
@@ -49,7 +52,7 @@ namespace NZWalks.API.Controllers
 
         #region Add WalkDifficulty
         [HttpPost]
-        
+        [Authorize(Roles = "writer")]
         public async Task<IActionResult> AddWalkDifficultyAsync([FromBody]Models.DTO.AddWalkDifficultyRequest addWalkDifficultyRequest)
         {
             //convert to domain
@@ -69,6 +72,7 @@ namespace NZWalks.API.Controllers
         #region Update WalkDifficulty
         [HttpPut]
         [Route("{id:guid}")]
+        [Authorize(Roles = "writer")]
         public async Task<IActionResult> UpdateWalkDifficultyAsync([FromRoute]Guid id, [FromBody]Models.DTO.UpdateWalkDifficultyRequest updateWalkDifficultyRequest)
         {
             //convert to domain
@@ -92,6 +96,7 @@ namespace NZWalks.API.Controllers
         #region Delete WalkDificulty
         [HttpDelete]
         [Route("{id:guid}")]
+        [Authorize(Roles = "writer")]
         public async Task<IActionResult> DeleteWalkDificultyAsync([FromRoute]Guid id)
         {
             var response = await walkDifficultyRepository.DeleteWalkDifficultyByIdAsync(id);
